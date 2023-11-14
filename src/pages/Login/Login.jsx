@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   loadCaptchaEnginge,
   LoadCanvasTemplate,
@@ -8,22 +8,25 @@ import login_img from "../../assets/others/authentication2.png";
 import "./Login.css";
 import { Helmet } from "react-helmet-async";
 import useAuth from "../../hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(true);
-  const captchaRef = useRef();
   const { signIn } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
     loadCaptchaEnginge(6);
   }, []);
 
-  const handleValidateCaptcha = () => {
-    const userCaptchaValue = captchaRef.current.value;
+  const handleValidateCaptcha = (e) => {
+    const userCaptchaValue = e.target.value;
     if (validateCaptcha(userCaptchaValue)) {
       setDisabled(false);
     } else {
@@ -33,15 +36,16 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // console.log(email, password);
     signIn(email, password)
       .then((result) => {
         const user = result.user;
         console.log(user);
         Swal.fire({
-            title: "Login Successful!",
-            icon: "success"
-          });
+          title: "Login Successful!",
+          icon: "success",
+        });
+        // navigate user
+        navigate(from, { replace: true });
       })
       .catch((error) => {
         console.error(error.message);
@@ -98,7 +102,6 @@ const Login = () => {
                   type="text"
                   placeholder="Enter the text above"
                   className="input input-bordered"
-                  ref={captchaRef}
                   onBlur={handleValidateCaptcha}
                   required
                 />

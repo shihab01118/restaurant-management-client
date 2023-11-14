@@ -4,21 +4,29 @@ import register_bg from "../../assets/others/authentication.png";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const Register = () => {
-    const {createUser} = useAuth();
+  const { createUser, updateUser } = useAuth();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => {
-    createUser(data.email, data.password)
-    .then(result => {
-        const loggedUser = result.user;
-        console.log(loggedUser);
-    })
+    createUser(data.email, data.password).then((result) => {
+      const loggedUser = result.user;
+      console.log(loggedUser);
+      // update user profile
+      updateUser(data.name, data.image);
+      Swal.fire({
+        title: "Registration Successful!",
+        icon: "success",
+      });
+      reset();
+    });
   };
 
   return (
@@ -68,6 +76,20 @@ const Register = () => {
                 />
                 {errors.email && (
                   <p className="text-red-600 mt-2">Email is required</p>
+                )}
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="">Image Url</span>
+                </label>
+                <input
+                  type="url"
+                  placeholder="Your Image URL"
+                  className="input input-bordered"
+                  {...register("image", { required: true })}
+                />
+                {errors.image && (
+                  <p className="text-red-600 mt-2">Image URL is required</p>
                 )}
               </div>
               <div className="form-control">
