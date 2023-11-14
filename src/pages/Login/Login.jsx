@@ -6,12 +6,15 @@ import {
 } from "react-simple-captcha";
 import login_img from "../../assets/others/authentication2.png";
 import "./Login.css";
+import { Helmet } from "react-helmet-async";
+import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(true);
   const captchaRef = useRef();
+  const {createUser} = useAuth();
 
   useEffect(() => {
     loadCaptchaEnginge(6);
@@ -28,11 +31,22 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log(email, password);
+    // console.log(email, password);
+    createUser(email, password)
+    .then(result => {
+        const user = result.user;
+        console.log(user);
+    })
+    .catch(error => {
+        console.error(error.message);
+    })
   };
 
   return (
     <section className="min-h-screen login  py-10 md:py-16 lg:py-24">
+        <Helmet>
+            <title>Bistro Boss | Login</title>
+        </Helmet>
       <div className="max-w-6xl mx-8 md:mx-16 lg:mx-auto shadow-2xl px-24 py-14 flex flex-col md:flex-row items-center">
         <div className="md:w-1/2">
           <img src={login_img} alt="login" className="w-4/5" />
