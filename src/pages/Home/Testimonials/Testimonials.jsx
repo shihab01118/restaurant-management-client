@@ -8,14 +8,17 @@ import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import "swiper/css";
 import "swiper/css/navigation";
+import axios from "axios";
 
 const Testimonials = () => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    fetch("/reviews.json")
-      .then((res) => res.json())
-      .then((data) => setReviews(data));
+    // fetch("/reviews.json")
+    //   .then((res) => res.json())
+    //   .then((data) => setReviews(data));
+    axios.get("http://localhost:5000/api/v1/user/reviews")
+    .then(res => setReviews(res.data));
   }, []);
 
   return (
