@@ -1,5 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
+import { FaShoppingCart } from "react-icons/fa";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
@@ -26,16 +27,24 @@ const Navbar = () => {
       <li>
         <NavLink to="/order/salads">Order</NavLink>
       </li>
+      <li>
+        <Link to="/">
+          <div className="relative">
+            <FaShoppingCart className="text-2xl" />
+            <span className="absolute left-[90%] -top-4 z-10 bg-orange-500 btn btn-xs btn-circle border-none text-white">0</span>
+          </div>
+        </Link>
+      </li>
 
       {user ? (
         <>
-          <li>
+          <li className="ml-8">
             <button onClick={handleLogOut}>Log Out</button>
           </li>
         </>
       ) : (
         <>
-          <li>
+          <li className="ml-8">
             <NavLink to="/login">Login</NavLink>
           </li>
         </>

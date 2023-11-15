@@ -1,7 +1,49 @@
 import PropTypes from "prop-types";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
+import { useLocation, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { axiosSecure } from "../../hooks/useAxiosSecure";
 
 const FoodCard = ({ item }) => {
-  const { name, recipe, image, price } = item || {};
+  const { name, recipe, image, price, _id } = item || {};
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleAddToCart = () => {
+    if (user && user.email) {
+      // TODO: save info to database
+      const cartItem = {
+        itemId: _id,
+        email: user.email,
+        name, image, price
+      }
+      axiosSecure.post("/api/v1/user/cart", cartItem)
+      .then(res => {
+        const data = res.data;
+        console.log(data);
+        if (data.insertedId) {
+          toast.success('Successfully added to cart!')
+        }
+      })
+    } else {
+      // TODO: navigate user to the login page with a toast
+      Swal.fire({
+        title: "You're not logged in",
+        text: "Please login to add to cart",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Login!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login", { state: { from: location } });
+        }
+      });
+    }
+  };
 
   return (
     <div className="card bg-base-100 shadow-xl relative rounded-none">
@@ -14,7 +56,10 @@ const FoodCard = ({ item }) => {
       <div className="card-body items-center text-center">
         <h2 className="card-title">{name}</h2>
         <p className="text-justify">{recipe}</p>
-        <button className="btn btn-outline capitalize border-0 border-b-4 border-[#BB8506] text-[#BB8506] hover:text-[#BB8506]">
+        <button
+          onClick={handleAddToCart}
+          className="btn btn-outline capitalize border-0 border-b-4 border-[#BB8506] text-[#BB8506] hover:text-[#BB8506]"
+        >
           Add To Cart
         </button>
       </div>
