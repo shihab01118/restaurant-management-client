@@ -3,17 +3,20 @@ import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { axiosSecure } from "../../hooks/useAxiosSecure";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useCart from "../../hooks/useCart";
 
 const FoodCard = ({ item }) => {
   const { name, recipe, image, price, _id } = item || {};
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const axiosSecure = useAxiosSecure();
+  const {refetch} = useCart();
 
   const handleAddToCart = () => {
     if (user && user.email) {
-      // TODO: save info to database
+      // save info to database
       const cartItem = {
         itemId: _id,
         email: user.email,
@@ -26,9 +29,11 @@ const FoodCard = ({ item }) => {
         if (data.insertedId) {
           toast.success('Successfully added to cart!')
         }
+        // update count of cart in navbar
+        refetch();
       })
     } else {
-      // TODO: navigate user to the login page with a toast
+      // navigate user to the login page with a toast
       Swal.fire({
         title: "You're not logged in",
         text: "Please login to add to cart",
