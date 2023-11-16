@@ -14,11 +14,12 @@ import {
 import { NavLink, Outlet } from "react-router-dom";
 import useCart from "../hooks/useCart";
 import { Helmet } from "react-helmet-async";
+import useAdmin from "../hooks/useAdmin";
 
 const Dashboard = () => {
   const { cart } = useCart();
   // TODO: set the admin from database
-  const isAdmin = true;
+  const { isAdmin } = useAdmin();
 
   return (
     <>
