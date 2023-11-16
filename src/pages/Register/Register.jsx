@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
+import SocialLogin from "../../components/SocialLogin/SocialLogin";
 
 const Register = () => {
   const { createUser, updateUser } = useAuth();
@@ -148,6 +149,7 @@ const Register = () => {
                 </button>
               </div>
             </form>
+            <SocialLogin />
           </div>
         </div>
       </section>

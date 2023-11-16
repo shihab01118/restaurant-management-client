@@ -10,6 +10,7 @@ import { Helmet } from "react-helmet-async";
 import useAuth from "../../hooks/useAuth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import SocialLogin from "../../components/SocialLogin/SocialLogin";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -115,6 +116,7 @@ const Login = () => {
                 </button>
               </div>
             </form>
+            <SocialLogin />
           </div>
         </div>
       </section>
