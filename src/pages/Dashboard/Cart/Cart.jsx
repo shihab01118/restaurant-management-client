@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import CartItem from "../../../components/CartItem/CartItem";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 import useCart from "../../../hooks/useCart";
@@ -7,12 +8,13 @@ const Cart = () => {
   const totalPrice = cart.reduce((sum, item) => item.price + sum, 0);
 
   return (
-    <section>
-      <div className="">
-        <SectionTitle heading="WANNA ADD MORE?" subheading="My Cart" />
-      </div>
+    <>
+      <Helmet>
+        <title>Bistro Boss | Dashboard - Cart</title>
+      </Helmet>
+      <SectionTitle heading="WANNA ADD MORE?" subheading="My Cart" />
       <div className="bg-white mx-16 p-10">
-        <div className="flex justify-between mb-6">
+        <div className="flex justify-between mb-4">
           <h2 className="text-3xl font-bold">Total Orders: {cart.length}</h2>
           <h2 className="text-3xl font-bold">Total Price: ${totalPrice}</h2>
           <button className="btn bg-[#D1A054] border-none capitalize text-white text-lg font-bold">
@@ -38,7 +40,7 @@ const Cart = () => {
           </table>
         </div>
       </div>
-    </section>
+    </>
   );
 };
 export default Cart;

@@ -18,7 +18,8 @@ const CartItem = ({ item, index }) => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
+    })
+    .then((result) => {
       if (result.isConfirmed) {
         axiosSecure.delete(`/api/v1/user/cart/${_id}`).then((res) => {
           const data = res.data;
