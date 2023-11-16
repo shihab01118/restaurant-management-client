@@ -5,9 +5,12 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Register = () => {
   const { createUser, updateUser } = useAuth();
+  const axiosPublic = useAxiosPublic();
+
   const {
     register,
     handleSubmit,
@@ -20,12 +23,24 @@ const Register = () => {
       const loggedUser = result.user;
       console.log(loggedUser);
       // update user profile
-      updateUser(data.name, data.image);
-      Swal.fire({
-        title: "Registration Successful!",
-        icon: "success",
+      updateUser(data.name, data.image).then(() => {
+        // save user info to database
+        const userInfo = {
+          name: data.name,
+          email: data.email,
+        };
+        axiosPublic.post("/api/v1/users", userInfo).then((res) => {
+          const data = res.data;
+          if (data.insertedId) {
+            // reset form, give alert and navigate
+            reset();
+            Swal.fire({
+              title: "Registration Successful!",
+              icon: "success",
+            });
+          }
+        });
       });
-      reset();
     });
   };
 

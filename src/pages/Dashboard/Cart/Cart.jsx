@@ -31,8 +31,8 @@ const Cart = () => {
               </tr>
             </thead>
             <tbody>
-              {cart.map((item) => (
-                <CartItem key={item._id} item={item} />
+              {cart.map((item, index) => (
+                <CartItem key={item._id} item={item} index={index} />
               ))}
             </tbody>
           </table>
