@@ -2,16 +2,50 @@ import { Helmet } from "react-helmet-async";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 import { useForm } from "react-hook-form";
 import { FaUtensils } from "react-icons/fa";
+import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import toast from "react-hot-toast";
+
+const img_hosting_key = import.meta.env.VITE_IMG_HOSTING_KEY;
+const img_hosting_api = `https://api.imgbb.com/1/upload?key=${img_hosting_key}`;
 
 const AddItems = () => {
+  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    // console.log(data);
+    const imageFile = { image: data.image[0] };
+    const res = await axiosPublic.post(img_hosting_api, imageFile, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(res.data);
+    if (res.data.success) {
+      const menuItem = {
+        name: data.name,
+        category: data.category,
+        price: data.price,
+        recipe: data.recipe,
+        image: res.data.data.display_url,
+      };
+      const menuItemRes = await axiosSecure.post(
+        "/api/v1/admin/menus",
+        menuItem
+      );
+      console.log(menuItemRes.data);
+      if (menuItemRes.data.insertedId) {
+        reset();
+        toast.success("Item added successfully!");
+      }
+    }
   };
 
   return (
@@ -45,7 +79,8 @@ const AddItems = () => {
                   Category<span className="text-red-600">*</span>
                 </span>
               </label>
-              <select defaultValue="default"
+              <select
+                defaultValue="default"
                 {...register("category", { required: true })}
                 className="select select-bordered w-full"
               >
@@ -56,7 +91,7 @@ const AddItems = () => {
                 <option value="pizza">Pizza</option>
                 <option value="soup">Soup</option>
                 <option value="dessert">Dessert</option>
-                <option value="drink">Drink</option>
+                <option value="drink">Drinks</option>
               </select>
               {errors.category && (
                 <p className="text-red-600 mt-2">Category is required</p>
