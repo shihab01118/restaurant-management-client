@@ -52,7 +52,7 @@ const ManageMenuItem = ({ item, index }) => {
       <td>{name}</td>
       <td>${price}</td>
       <td>
-        <Link>
+        <Link to={`/dashboard/updateItem/${_id}`}>
           <button className="btn btn-sm text-white mr-2 bg-[#D1A054]">
             <FaRegEdit className="text-lg" />
           </button>
