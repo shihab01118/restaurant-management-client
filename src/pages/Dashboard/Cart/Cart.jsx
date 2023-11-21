@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import CartItem from "../../../components/CartItem/CartItem";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 import useCart from "../../../hooks/useCart";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const { cart } = useCart();
@@ -17,9 +18,13 @@ const Cart = () => {
         <div className="flex justify-between mb-4">
           <h2 className="text-3xl font-bold">Total Orders: {cart.length}</h2>
           <h2 className="text-3xl font-bold">Total Price: ${totalPrice}</h2>
-          <button className="btn bg-[#D1A054] border-none capitalize text-white text-lg font-bold">
-            Pay
-          </button>
+          {cart.length ? <Link to="/dashboard/payment">
+            <button className="btn bg-[#D1A054] border-none capitalize text-white text-lg font-bold">
+              Pay
+            </button>
+          </Link> : <button disabled className="btn bg-[#D1A054] border-none capitalize text-white text-lg font-bold">
+              Pay
+            </button>}
         </div>
         <div className="overflow-x-auto">
           <table className="table">
